@@ -1,121 +1,77 @@
-# OrganMatch — Setup Guide
+# OrganMatch - Medical Organ Transplant Matching System
 
-## Prerequisites
-- Python 3.10+
-- Node.js 18+
-- MySQL 8.0+
+OrganMatch is a secure, intelligent, and scalable MERN stack web application designed to connect organ donors with recipients. It integrates advanced AI capabilities to validate medical reports and ensures fair match prioritization.
 
----
+## 🚀 Key Features
+- **OTP-Based Secure Authentication:** Secure user registration and password recovery using OTPs sent via Gmail SMTP.
+- **AI Medical Report Validation:** Integration with Google Gemini AI to analyze and extract relevant clinical details from uploaded donor/recipient medical reports (PDF format).
+- **Match Priority System:** Intelligent matching algorithm based on HLA typing, blood group compatibility, and medical urgency.
+- **Secure Payments:** Integrated Razorpay payment gateway to process and confirm transactions securely.
+- **Real-Time Dashboards:** Dedicated interactive portals for Donors, Recipients, and Hospital Admins.
+- **AI Medical Chatbot:** A Gemini-powered smart assistant to resolve user queries instantly.
 
-## 1. MySQL Database Setup
+## 🛠 Tech Stack
+- **Frontend:** React.js, Vite, Axios
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB
+- **AI Integration:** Google Gemini Pro API
+- **Payment Gateway:** Razorpay
+- **Other Technologies:** Socket.io, JSON Web Tokens (JWT), Nodemailer
 
-Start MySQL and run:
-```sql
-CREATE DATABASE organmatch CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
+## 📦 Project Structure
+- `/frontend`: React + Vite client-side application.
+- `/backend-node`: Node.js/Express server handling APIs, AI processing, and Database connectivity.
+- `/dummy_reports_for_demo`: Sample medical PDFs for testing and presentation purposes.
 
-Then update `backend/.env`:
-```
-DATABASE_URL=mysql+mysqlconnector://root:YOUR_MYSQL_PASSWORD@localhost/organmatch
-```
+## ⚙️ Installation & Setup
 
----
+### Prerequisites
+- Node.js installed
+- MongoDB installed and running locally (or MongoDB Atlas URI)
+- Google Gemini API Key
+- Razorpay API Credentials
+- Gmail App Password for sending emails
 
-## 2. Backend Setup (Flask)
-
+### 1. Clone the Repository
 ```bash
-cd backend
-python -m venv venv
-.\venv\Scripts\Activate.ps1  # Windows
-pip install -r requirements.txt
-python app.py   # Creates tables automatically on first run
+git clone https://github.com/YourUsername/OrganMatch.git
+cd OrganMatch
 ```
 
-### Seed Sample Data
+### 2. Environment Variables Configuration
+Create a `.env` file in the **root** folder of the project with the following keys:
+```env
+# Node Backend Env
+PORT=8000
+MONGO_URI=mongodb://127.0.0.1:27017/organmatch
+JWT_SECRET=your_jwt_secret_key
+
+# External APIs
+GEMINI_API_KEY=your_gemini_api_key
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+
+# Common Email Env (for SMTP)
+SENDER_EMAIL=your_email@gmail.com
+SENDER_PASSWORD=your_app_password
+```
+
+### 3. Backend Setup
 ```bash
-python seed.py
+cd backend-node
+npm install
+npm start
 ```
+The backend server will run on `http://localhost:8000`.
 
-Backend runs at: **http://localhost:5000**
-
----
-
-## 3. Frontend Setup (React)
-
+### 4. Frontend Setup
+Open a new terminal window:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-
-Frontend runs at: **http://localhost:5173**
-
----
-
-## Demo Login Credentials (after seeding)
-
-| Role | Email | Password |
-|------|-------|----------|
-| Super Admin | admin@organmatch.com | Admin@123 |
-| Government | gov@organmatch.com | Gov@123 |
-| Hospital Admin | apollo@hospital.com | Hospital@123 |
-| Donor | rahul@donor.com | Donor@123 |
-| Recipient | amit@recipient.com | Recipient@123 |
+The frontend application will be available at `http://localhost:5173`.
 
 ---
-
-## Demo Workflow
-
-1. **Login as Donor** (`rahul@donor.com`) → View dashboard, upload a medical report.
-2. **Login as Hospital Admin** (`apollo@hospital.com`) → Verify the uploaded report, then review the pre-seeded match (Match #1) and set decision to "Approved."
-3. **Login as Government** (`gov@organmatch.com`) → Review the hospital-approved match → Approve it.
-4. **Login as Donor** again → See status advance to "Government Approved" on the timeline.
-5. **Login as Government** → Navigate to Transplants → Mark as "In Progress" then "Success."
-6. **Login as Admin** (`admin@organmatch.com`) → View Audit Logs to see all actions.
-7. **Test AI Matching**: As Hospital Admin, first mark the donor as Verified via Admin > Users. Then as Donor, click "Find Matches" to trigger the AI scoring algorithm.
-
----
-
-## Project Structure
-
-```
-organmatch/
-├── backend/
-│   ├── app.py           # Flask entry point
-│   ├── config.py        # Configuration
-│   ├── seed.py          # Sample data seeder
-│   ├── models/          # SQLAlchemy ORM models
-│   ├── routes/          # API route blueprints
-│   ├── services/        # AI matching & report services
-│   └── utils/           # DB, helpers, file upload
-│
-├── frontend/
-│   └── src/
-│       ├── pages/       # Role dashboards & forms
-│       ├── components/  # Sidebar, Modal, Timeline
-│       ├── services/    # API & auth services
-│       └── context/     # AuthContext (JWT)
-│
-└── schema.sql           # Manual MySQL schema (optional)
-```
-
----
-
-## API Endpoints Summary
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register a new user |
-| POST | `/api/auth/login` | Login, get JWT token |
-| GET | `/api/auth/me` | Get current user |
-| POST | `/api/donor/register` | Create donor profile |
-| POST | `/api/donor/upload-report` | Upload medical document |
-| POST | `/api/recipient/register` | Create recipient profile |
-| POST | `/api/matches/generate` | Trigger AI matching |
-| GET | `/api/matches/my-matches` | Get user's matches |
-| POST | `/api/hospital/verify-report/<id>` | Verify medical report |
-| POST | `/api/hospital/approve-match/<id>` | Hospital decision on match |
-| POST | `/api/government/approve-match/<id>` | Government decision |
-| POST | `/api/government/update-transplant/<id>` | Update transplant status |
-| GET | `/api/admin/dashboard-stats` | System statistics |
-| GET | `/api/admin/audit-logs` | Full audit trail |
+*Developed as part of a final-year engineering project.*
