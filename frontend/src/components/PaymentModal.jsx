@@ -12,37 +12,75 @@ export default function PaymentModal({ isOpen, onClose, onSuccess, amount = 5000
 
     const handlePay = async (e) => {
         e.preventDefault();
-        
-        if (cardData.name.trim().length < 3) return setError('Please enter a valid cardholder name.');
-        if (cardData.number.replace(/\s/g, '').length !== 16) return setError('Card number must be exactly 16 digits.');
-        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cardData.expiry)) return setError('Expiry must be a valid month (01-12) in MM/YY format.');
-        const [month, year] = cardData.expiry.split('/');
-        const currentYear = new Date().getFullYear() % 100;
-        const currentMonth = new Date().getMonth() + 1;
-        if (parseInt(year) < currentYear || (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
-             return setError('Card has expired.');
-        }
-        if (cardData.cvv.length !== 3 || !/^\d{3}$/.test(cardData.cvv)) return setError('CVV must be exactly 3 digits.');
-
         setProcessing(true);
         setError('');
 
         try {
-            await new Promise(r => setTimeout(r, 2000));
-            const res = await api.post('/payment/pay', {
-                amount,
-                purpose,
-                match_id,
-                card_number: cardData.number,
-                card_holder: cardData.name
+            // 1. Create order
+            const orderRes = await api.post('/payment/create-order', { amount });
+            const { order_id, key_id, amount: orderAmount, currency } = orderRes.data;
+
+            // 2. Load Razorpay Script if not loaded
+            const loadScript = () => new Promise((resolve) => {
+                if (window.Razorpay) return resolve(true);
+                const script = document.createElement('script');
+                script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+                script.onload = () => resolve(true);
+                script.onerror = () => resolve(false);
+                document.body.appendChild(script);
             });
 
-            toast.success('🎉 Payment Successful! Transaction ID: ' + res.data.transaction_id);
-            onSuccess();
-            onClose();
+            const scriptLoaded = await loadScript();
+            if (!scriptLoaded) throw new Error("Failed to load Razorpay SDK. Check your connection.");
+
+            // 3. Open Razorpay Checkout
+            const options = {
+                key: key_id,
+                amount: orderAmount,
+                currency: currency,
+                name: "OrganMatch",
+                description: purpose,
+                order_id: order_id,
+                handler: async function (response) {
+                    try {
+                        setProcessing(true);
+                        // 4. Verify Payment on Backend
+                        const verifyRes = await api.post('/payment/verify', {
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_signature: response.razorpay_signature,
+                            amount,
+                            purpose,
+                            match_id
+                        });
+                        
+                        toast.success('🎉 Payment Successful! Transaction ID: ' + verifyRes.data.transaction_id);
+                        onSuccess();
+                        onClose();
+                    } catch (err) {
+                        toast.error(err.response?.data?.error || 'Payment verification failed.');
+                        setProcessing(false);
+                    }
+                },
+                theme: {
+                    color: "#FF2B51"
+                },
+                modal: {
+                    ondismiss: function() {
+                        setProcessing(false);
+                    }
+                }
+            };
+            
+            const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', function (response){
+                setError(response.error.description || 'Payment failed.');
+                setProcessing(false);
+            });
+            rzp.open();
+
         } catch (err) {
-            setError(err.response?.data?.error || 'Payment failed. Please try again.');
-        } finally {
+            setError(err.response?.data?.error || err.message || 'Error initializing payment.');
             setProcessing(false);
         }
     };
@@ -64,49 +102,22 @@ export default function PaymentModal({ isOpen, onClose, onSuccess, amount = 5000
                 </div>
 
                 <div className="payment-body-compact">
-                    <form onSubmit={handlePay}>
+                    <div>
                         {error && <div className="payment-error-red">{error}</div>}
 
-                        <div className="input-field-compact">
-                            <label>ENTER YOUR NAME</label>
-                            <input placeholder="Enter Your Name" required
-                                value={cardData.name} onChange={e => setCardData({ ...cardData, name: e.target.value.replace(/[^A-Za-z\s]/g, '') })} />
+                        <div style={{ marginBottom: '20px', textAlign: 'center', color: '#7f8c8d', fontSize: '0.9rem', fontWeight: '500' }}>
+                            You will be redirected to the secure Razorpay payment gateway to complete your transaction via UPI, Cards, or NetBanking.
                         </div>
 
-                        <div className="input-field-compact">
-                            <label>CARD NUMBER</label>
-                            <input placeholder="0000 0000 0000 0000" required maxLength="19"
-                                value={cardData.number} onChange={e => setCardData({ ...cardData, number: e.target.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim() })} />
-                        </div>
-
-                        <div className="input-row-compact">
-                            <div className="input-field-compact">
-                                <label>EXPIRY</label>
-                                <input placeholder="MM/YY" required maxLength="5"
-                                    value={cardData.expiry} onChange={e => {
-                                        let val = e.target.value.replace(/\D/g, '');
-                                        if (val.length >= 3) {
-                                            val = val.substring(0, 2) + '/' + val.substring(2, 4);
-                                        }
-                                        setCardData({ ...cardData, expiry: val });
-                                    }} />
-                            </div>
-                            <div className="input-field-compact">
-                                <label>CVV</label>
-                                <input type="password" placeholder="***" required maxLength="3"
-                                    value={cardData.cvv} onChange={e => setCardData({ ...cardData, cvv: e.target.value.replace(/\D/g, '').slice(0, 3) })} />
-                            </div>
-                        </div>
-
-                        <button type="submit" className="pay-btn-red" disabled={processing}>
+                        <button type="button" onClick={handlePay} className="pay-btn-red" disabled={processing}>
                             {processing ? (
                                 <div className="loader-container">
                                     <div className="payment-white-spinner"></div>
-                                    <span>Verifying...</span>
+                                    <span>Processing...</span>
                                 </div>
-                            ) : `Pay ₹${amount.toLocaleString()}`}
+                            ) : `Proceed to Pay ₹${amount.toLocaleString()}`}
                         </button>
-                    </form>
+                    </div>
                     <div className="payment-footer-mini">
                         <span>🛡️ Secured</span>
                         <span>💳 MasterCard/Visa</span>

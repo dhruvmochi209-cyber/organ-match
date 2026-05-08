@@ -167,7 +167,7 @@ export default function AdminDashboard() {
               <tbody>
                 {users.map(u => (
                   <tr key={u.id}>
-                    <td>#{u.id}</td>
+                    <td>#{u.id.substring(0,8).toUpperCase()}</td>
                     <td><strong>{u.username}</strong></td>
                     <td>{u.email}</td>
                     <td><span className="badge badge-neutral">{u.role}</span></td>
@@ -191,7 +191,7 @@ export default function AdminDashboard() {
               <tbody>
                 {hospitals.map(h => (
                   <tr key={h.id}>
-                    <td>HID-{h.id}</td>
+                    <td>HID-{h.id.substring(0,8).toUpperCase()}</td>
                     <td>{h.name}</td>
                     <td>{h.location}</td>
                     <td><span className={`badge ${h.certification_status === 'Certified' ? 'badge-success' : 'badge-warning'}`}>{h.certification_status}</span></td>
@@ -218,7 +218,7 @@ export default function AdminDashboard() {
               <tbody>
                 {auditLogs.slice(0, 50).map(log => (
                   <tr key={log.id}>
-                    <td>#{log.id}</td>
+                    <td>#{log.id.substring(0,8).toUpperCase()}</td>
                     <td><strong>{log.username}</strong></td>
                     <td>{log.action}</td>
                     <td>{new Date(log.created_at).toLocaleString()}</td>
@@ -237,7 +237,7 @@ export default function AdminDashboard() {
               <tbody>
                 {completedTransplants.map(t => (
                   <tr key={t.id}>
-                    <td>#{t.id}</td>
+                    <td>#{t.id.substring(0,8).toUpperCase()}</td>
                     <td><strong>{t.donor_name}</strong></td>
                     <td><strong>{t.recipient_name}</strong></td>
                     <td><span className="badge badge-success">{t.match_score}%</span></td>

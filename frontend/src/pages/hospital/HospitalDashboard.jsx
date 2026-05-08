@@ -326,7 +326,7 @@ export default function HospitalDashboard() {
               <tbody>
                 {pendingReports.map(r => (
                   <tr key={r.id}>
-                    <td>#{r.id}</td><td><strong>{r.username}</strong></td><td><span className="badge badge-info">{r.report_type}</span></td><td>{new Date(r.created_at).toLocaleDateString()}</td>
+                    <td>#{r.id.substring(0,8).toUpperCase()}</td><td><strong>{r.username}</strong></td><td><span className="badge badge-info">{r.report_type}</span></td><td>{new Date(r.created_at).toLocaleDateString()}</td>
                     <td>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         <button className="btn btn-sm btn-success" onClick={() => handleVerifyReport(r.id, 'Verified')}>Verify</button>
@@ -348,7 +348,7 @@ export default function HospitalDashboard() {
               <tbody>
                 {matches.map(m => (
                   <tr key={m.id}>
-                    <td>Case #{m.id}</td><td><strong>{m.match_score}%</strong></td><td><span className={`badge ${m.risk_level === 'Low' ? 'badge-success' : 'badge-error'}`}>{m.risk_level}</span></td>
+                    <td>Case #{m.id.substring(0,8).toUpperCase()}</td><td><strong>{m.match_score}%</strong></td><td><span className={`badge ${m.risk_level === 'Low' ? 'badge-success' : 'badge-error'}`}>{m.risk_level}</span></td>
                     <td><span className="text-xs">{m.status}</span></td>
                     <td>
                         {m.approval?.hospital_decision === 'Pending' ? (
@@ -380,7 +380,7 @@ export default function HospitalDashboard() {
               <tbody>
                 {transplants.map(t => (
                   <tr key={t.id}>
-                    <td>#{t.id}</td><td><strong>{t.donor_name}</strong></td><td><strong>{t.recipient_name}</strong></td>
+                    <td>#{t.id.substring(0,8).toUpperCase()}</td><td><strong>{t.donor_name}</strong></td><td><strong>{t.recipient_name}</strong></td>
                     <td><span className="badge badge-success">{t.match_score}%</span></td>
                     <td>{new Date(t.created_at).toLocaleDateString()}</td>
                   </tr>
@@ -391,7 +391,7 @@ export default function HospitalDashboard() {
           </div>
         )}
 
-        <Modal isOpen={!!modalMatch} onClose={() => setModalMatch(null)} title={`Match Review Case #${modalMatch?.id}`}>
+        <Modal isOpen={!!modalMatch} onClose={() => setModalMatch(null)} title={`Match Review Case #${modalMatch?.id.substring(0,8).toUpperCase()}`}>
           {modalMatch && (
             <div>
               <div className="card" style={{ background: '#f9fafb', padding: '1rem', marginBottom: '1.5rem', textAlign: 'center' }}>

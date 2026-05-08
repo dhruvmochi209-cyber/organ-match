@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
 import DonorDashboard from './pages/donor/DonorDashboard';
 import DonorForm from './pages/donor/DonorForm';
 import RecipientDashboard from './pages/recipient/RecipientDashboard';
@@ -25,6 +26,7 @@ function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
 
       <Route path="/donor" element={<ProtectedRoute allowedRoles={['donor']}><DonorDashboard /></ProtectedRoute>} />
       <Route path="/donor/register" element={<ProtectedRoute allowedRoles={['donor']}><DonorForm /></ProtectedRoute>} />

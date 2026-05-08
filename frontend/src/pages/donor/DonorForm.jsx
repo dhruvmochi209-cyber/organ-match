@@ -7,6 +7,17 @@ import api from '../../services/api';
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 const ORGANS = ['Kidney', 'Liver', 'Heart', 'Lung', 'Pancreas', 'Cornea', 'Bone Marrow'];
 
+const ORGAN_REPORTS = {
+  Kidney: ['KFT Report', 'Ultrasound KUB', 'Viral Markers', 'Blood Routine'],
+  Liver: ['LFT Report', 'Ultrasound Abdomen', 'Viral Markers', 'ECG'],
+  Heart: ['ECG', 'Echocardiogram', 'Chest X-Ray', 'Viral Markers'],
+  Lung: ['PFT', 'Chest X-Ray', 'Viral Markers', 'Blood Routine'],
+  Pancreas: ['Amylase & Lipase', 'Ultrasound', 'Viral Markers', 'Blood Routine'],
+  Cornea: ['Eye Exam', 'Viral Markers', 'Blood Routine', 'General Fitness'],
+  'Bone Marrow': ['HLA Typing Full', 'CBC', 'Viral Markers', 'General Fitness'],
+  default: ['Blood Test', 'Scan', 'Viral Markers', 'General Fitness']
+};
+
 export default function DonorForm() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -16,10 +27,11 @@ export default function DonorForm() {
   const [error, setError] = useState('');
   const [existing, setExisting] = useState(false);
   
-  // New States for Mandatory Upload
-  const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [reportStatus, setReportStatus] = useState(null); // 'pending', 'success', 'failed'
+  const requiredReports = ORGAN_REPORTS[form.organ_to_donate] || ORGAN_REPORTS.default;
+
+  const [files, setFiles] = useState({});
+  const [uploading, setUploading] = useState({});
+  const [reportStatus, setReportStatus] = useState({});
 
   useEffect(() => {
     api.get('/hospital/all').then(r => setHospitals(r.data)).catch(() => {});
@@ -27,37 +39,48 @@ export default function DonorForm() {
       if (r.data) { 
         setForm(r.data); 
         setExisting(true); 
-        setReportStatus('success'); // Already verified if profile exists
+        const successState = {};
+        (ORGAN_REPORTS[r.data.organ_to_donate] || ORGAN_REPORTS.default).forEach(rep => {
+            successState[rep] = 'success';
+        });
+        setReportStatus(successState);
       }
     }).catch(() => {});
   }, []);
 
-  const handleFileUpload = async () => {
-    if (!file) return setError('Please select a file first.');
-    setUploading(true);
+  const handleFileUpload = async (reportType) => {
+    const fileToUpload = files[reportType];
+    if (!fileToUpload) return setError(`Please select a file for ${reportType}.`);
+    
+    setUploading(prev => ({ ...prev, [reportType]: true }));
     setError('');
     
     const fd = new FormData();
-    fd.append('file', file);
-    fd.append('organ', form.organ_to_donate); // Pass selected organ for validation
+    fd.append('file', fileToUpload);
+    fd.append('organ', form.organ_to_donate);
+    fd.append('report_type', reportType);
 
     try {
-      const res = await api.post('/donor/upload-report', fd, { 
-        headers: { 'Content-Type': 'multipart/form-data' } 
-      });
-      setReportStatus('success');
-      setFile(null);
+      await api.post('/donor/upload-report', fd);
+      setReportStatus(prev => ({ ...prev, [reportType]: 'success' }));
     } catch (err) {
-      setReportStatus('failed');
-      setError(err.response?.data?.error || 'Verification failed. Please check the PDF content.');
+      setReportStatus(prev => ({ ...prev, [reportType]: 'failed' }));
+      setError(err.response?.data?.error || `Verification failed for ${reportType}.`);
     } finally {
-      setUploading(false);
+      setUploading(prev => ({ ...prev, [reportType]: false }));
     }
   };
+  
+  const handleFileChange = (reportType, e) => {
+    setFiles(prev => ({ ...prev, [reportType]: e.target.files[0] }));
+    setReportStatus(prev => ({ ...prev, [reportType]: null }));
+  };
+
+  const isAllVerified = requiredReports.every(rep => reportStatus[rep] === 'success');
 
   const handleSubmit = async (e) => {
     e.preventDefault(); 
-    if (reportStatus !== 'success') return setError('You must upload and verify your medical report first!');
+    if (!isAllVerified) return setError('You must upload and verify all required medical reports first!');
     
     setError(''); 
     setLoading(true);
@@ -114,7 +137,8 @@ export default function DonorForm() {
                   <select className="form-control" disabled={existing} value={form.organ_to_donate} 
                     onChange={e => {
                       setForm({ ...form, organ_to_donate: e.target.value });
-                      setReportStatus(null);
+                      setReportStatus({});
+                      setFiles({});
                     }}>
                     {ORGANS.map(o => <option key={o}>{o}</option>)}
                   </select>
@@ -182,7 +206,7 @@ export default function DonorForm() {
               </div>
 
               {!existing && (
-                <button type="submit" className="btn btn-primary w-full py-4 mt-2" disabled={loading || reportStatus !== 'success'}>
+                <button type="submit" className="btn btn-primary w-full py-4 mt-2" disabled={loading || !isAllVerified}>
                   {loading ? 'Processing...' : 'Complete Registration'}
                 </button>
               )}
@@ -190,48 +214,56 @@ export default function DonorForm() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <div className={`card ${reportStatus === 'success' ? 'bg-success-light' : ''}`} style={{ border: reportStatus === 'success' ? '1px solid var(--secondary)' : '1px dashed var(--border-color)' }}>
+            <div className={`card ${isAllVerified ? 'bg-success-light' : ''}`} style={{ border: isAllVerified ? '1px solid var(--secondary)' : '1px dashed var(--border-color)' }}>
               <div className="flex justify-between items-center mb-4">
-                 <h4 style={{ margin: 0 }}>Laboratory Report</h4>
-                 {reportStatus === 'success' && <span className="badge badge-success">Verified</span>}
+                 <h4 style={{ margin: 0 }}>Required Laboratory Reports</h4>
+                 {isAllVerified && <span className="badge badge-success">All Verified</span>}
               </div>
               
               <p className="text-sm text-muted mb-4">
-                Clinical requirement: Upload a digital copy of your latest medical screening (PDF). 
-                The system will automatically verify the report matches your selected organ: <strong>{form.organ_to_donate}</strong>.
+                Clinical requirement: Upload digital copies of your latest medical screenings (PDF). 
+                Our AI will automatically verify each report matches your selected organ: <strong>{form.organ_to_donate}</strong>.
               </p>
 
               {!existing && (
-                <div style={{ background: 'var(--bg-main)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📄</div>
-                  <input type="file" id="report-upload" accept=".pdf" style={{ display: 'none' }} 
-                    onChange={e => setFile(e.target.files[0])} disabled={uploading || reportStatus === 'success'} />
-                  
-                  {!file && reportStatus !== 'success' && (
-                    <label htmlFor="report-upload" className="btn btn-outline" style={{ cursor: 'pointer' }}>
-                       Select Medical PDF
-                    </label>
-                  )}
-
-                  {file && reportStatus !== 'success' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
-                      <span className="text-xs font-semibold">{file.name}</span>
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <button type="button" className="btn btn-primary btn-sm" onClick={handleFileUpload} disabled={uploading}>
-                          {uploading ? 'Analyzing Report...' : 'Verify Document'}
-                        </button>
-                        <button type="button" className="btn btn-outline btn-sm" onClick={() => setFile(null)} disabled={uploading}>
-                          Remove
-                        </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {requiredReports.map(reportType => (
+                    <div key={reportType} style={{ background: 'var(--bg-main)', padding: '1rem', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                      <div style={{ flex: 1, minWidth: '150px' }}>
+                        <div className="font-semibold text-sm">{reportType}</div>
+                        {reportStatus[reportType] === 'success' ? (
+                            <span className="text-xs text-success font-bold">✓ Verified by AI</span>
+                        ) : reportStatus[reportType] === 'failed' ? (
+                            <span className="text-xs text-error font-bold">✗ Verification Failed</span>
+                        ) : (
+                            <span className="text-xs text-muted">Pending Upload</span>
+                        )}
                       </div>
+                      
+                      {reportStatus[reportType] !== 'success' && (
+                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <input type="file" id={`report-${reportType.replace(/\s/g, '')}`} accept=".pdf" style={{ display: 'none' }} 
+                                onChange={e => handleFileChange(reportType, e)} disabled={uploading[reportType]} />
+                            
+                            {!files[reportType] ? (
+                                <label htmlFor={`report-${reportType.replace(/\s/g, '')}`} className="btn btn-outline btn-sm" style={{ cursor: 'pointer', margin: 0 }}>
+                                    Select PDF
+                                </label>
+                            ) : (
+                                <>
+                                    <span className="text-xs truncate" style={{ maxWidth: '100px', display: 'inline-block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={files[reportType].name}>{files[reportType].name}</span>
+                                    <button type="button" className="btn btn-primary btn-sm" onClick={() => handleFileUpload(reportType)} disabled={uploading[reportType]}>
+                                        {uploading[reportType] ? 'Analyzing...' : 'Verify'}
+                                    </button>
+                                    <button type="button" className="btn btn-outline btn-sm" onClick={() => setFiles(prev => ({ ...prev, [reportType]: null }))} disabled={uploading[reportType]}>
+                                        Remove
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                      )}
                     </div>
-                  )}
-
-                  {reportStatus === 'success' && (
-                    <div className="text-success font-bold">
-                       Medical Verification Complete
-                    </div>
-                  )}
+                  ))}
                 </div>
               )}
             </div>
@@ -249,3 +281,4 @@ export default function DonorForm() {
     </div>
   );
 }
+

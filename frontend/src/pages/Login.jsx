@@ -84,9 +84,15 @@ export default function Login() {
               placeholder="••••••••" />
           </div>
 
-          <button type="submit" className="btn btn-primary w-full" disabled={loading} style={{ height: '56px', fontSize: '1.1rem', borderRadius: '100px' }}>
+          <button type="submit" className="btn btn-primary w-full mb-4" disabled={loading} style={{ height: '56px', fontSize: '1.1rem', borderRadius: '100px' }}>
             {loading ? 'Verifying Access...' : 'Login Now'}
           </button>
+          
+          <div style={{ textAlign: 'right', marginBottom: '1rem' }}>
+            <Link to="/forgot-password" style={{ color: '#94a3b8', fontSize: '0.9rem', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = 'white'} onMouseOut={(e) => e.target.style.color = '#94a3b8'}>
+              Forgot Password?
+            </Link>
+          </div>
         </form>
 
         <p style={{ textAlign: 'center', marginTop: '3rem', color: '#94a3b8', fontSize: '1rem' }}>
