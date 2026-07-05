@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     enum: ['donor', 'recipient', 'hospital_admin', 'super_admin'], 
     required: true 
   },
+
   created_at: { type: Date, default: Date.now }
 });
 
@@ -19,10 +20,11 @@ userSchema.methods.matchPassword = async function(enteredPassword) {
 
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password_hash')) {
-    next();
+    return next();
   }
   const salt = await bcrypt.genSalt(10);
   this.password_hash = await bcrypt.hash(this.password_hash, salt);
+  next();
 });
 
 userSchema.set('toJSON', {

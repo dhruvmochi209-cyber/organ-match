@@ -257,7 +257,7 @@ export default function AdminDashboard() {
             <h4>System Status</h4>
             <p className="text-muted">The system is running on the institutional registry protocol. All data is synchronized across hospital nodes.</p>
             <div style={{ padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #ddd', marginTop: '1rem' }}>
-              <strong>Institutional Red:</strong> #FF2B51 | <strong>Institutional Green:</strong> #10b981
+              <strong>Institutional Orange:</strong> #ea580c | <strong>Institutional Green:</strong> #10b981
             </div>
           </div>
         )}

@@ -46,11 +46,6 @@ export default function Sidebar() {
   return (
     <aside className="sidebar" style={{ margin: '1.5rem', borderRadius: '32px' }}>
       <div className="sidebar-brand">
-        <div style={{ 
-          width: '40px', height: '40px', background: 'var(--primary)', 
-          borderRadius: '12px', display: 'flex', alignItems: 'center', 
-          justifyContent: 'center', fontSize: '1.4rem', boxShadow: '0 8px 16px var(--primary-glow)' 
-        }}>❤️</div>
         <h2 style={{ fontSize: '1.4rem', margin: 0, fontWeight: 1000, letterSpacing: '-0.04em' }}>Organ<span className="text-gradient">Match</span></h2>
       </div>
 

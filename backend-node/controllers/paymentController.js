@@ -25,7 +25,7 @@ const createOrder = async (req, res) => {
     const options = {
       amount: parseInt(amount) * 100,
       currency: 'INR',
-      payment_capture: 1
+      receipt: 'receipt_' + Date.now()
     };
     const order = await client.orders.create(options);
     res.status(200).json({
@@ -35,7 +35,8 @@ const createOrder = async (req, res) => {
       currency: order.currency
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    const errorMsg = error.message || (error.error && error.error.description) || "Payment initialization failed";
+    res.status(500).json({ error: errorMsg });
   }
 };
 
