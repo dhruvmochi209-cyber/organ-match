@@ -105,19 +105,19 @@ export default function Home() {
               gap: '2rem' 
             }}>
               <div className="card glass-container" style={{ gridColumn: 'span 8', gridRow: 'span 2', background: 'rgba(255, 255, 255, 0.7)', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '0 20px 40px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ width: '80px', height: '80px', background: 'var(--primary-light)', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3.5rem', marginBottom: '2.5rem', boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.5)' }}>🧬</div>
+                <img src="/dna.png" alt="DNA Precision Matching" style={{ width: '100%', height: '240px', objectFit: 'cover', borderRadius: '16px', marginBottom: '2rem', boxShadow: '0 10px 20px rgba(0,0,0,0.05)' }} />
                 <h3 style={{ fontSize: '2.5rem', color: '#0f172a', fontWeight: 900, marginBottom: '1rem' }}>Biological Precision Matching</h3>
                 <p style={{ color: '#475569', fontSize: '1.15rem', lineHeight: 1.8 }}>Advanced genomic sequencing and HLA cross-matching algorithms for maximum transplant success rates. Utilizing cutting-edge predictive AI models and real-time biological marker analysis, we ensure optimal organ compatibility, minimized rejection risks, and improved post-operative patient outcomes.</p>
               </div>
               
               <div className="card" style={{ gridColumn: 'span 4', background: 'linear-gradient(135deg, var(--primary), #ea580c)', border: 'none', boxShadow: '0 20px 40px rgba(234, 88, 12, 0.3)', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ width: '60px', height: '60px', background: 'rgba(255,255,255,0.2)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', marginBottom: '1.5rem', backdropFilter: 'blur(10px)' }}>🏥</div>
+                <img src="/hospital.png" alt="Institutional Nodes" style={{ width: '100%', height: '160px', objectFit: 'cover', borderRadius: '12px', marginBottom: '1.5rem', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }} />
                 <h3 style={{ color: 'white', fontSize: '1.75rem', fontWeight: 800 }}>Institutional Nodes</h3>
                 <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.05rem', lineHeight: 1.6 }}>Verified clinical network ensuring secure facility-to-facility data handoffs.</p>
               </div>
 
               <div className="card glass-container" style={{ gridColumn: 'span 4', background: 'rgba(255, 255, 255, 0.7)', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ width: '60px', height: '60px', background: '#f1f5f9', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', marginBottom: '1.5rem' }}>🛡️</div>
+                <img src="/secure.png" alt="Secure Protocols" style={{ width: '100%', height: '160px', objectFit: 'cover', borderRadius: '12px', marginBottom: '1.5rem', boxShadow: '0 10px 20px rgba(0,0,0,0.05)' }} />
                 <h3 style={{ color: '#0f172a', fontSize: '1.75rem', fontWeight: 800 }}>Secure Protocols</h3>
                 <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6 }}>End-to-end encrypted audits and immutable transplant ledgers.</p>
               </div>
