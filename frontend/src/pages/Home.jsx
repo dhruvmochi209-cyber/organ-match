@@ -102,27 +102,33 @@ export default function Home() {
               gridAutoRows: 'minmax(200px, auto)',
               gap: '2rem' 
             }}>
-              <div className="card glass-container" style={{ gridColumn: 'span 8', gridRow: 'span 2', background: 'rgba(255, 255, 255, 0.7)', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '0 20px 40px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <img src="/dna.png" alt="DNA Precision Matching" style={{ width: '100%', height: '240px', objectFit: 'cover', borderRadius: '16px', marginBottom: '2rem', boxShadow: '0 10px 20px rgba(0,0,0,0.05)' }} />
-                <h3 style={{ fontSize: '2.5rem', color: '#0f172a', fontWeight: 900, marginBottom: '1rem' }}>Biological Precision Matching</h3>
-                <p style={{ color: '#475569', fontSize: '1.15rem', lineHeight: 1.8 }}>Advanced genomic sequencing and HLA cross-matching algorithms for maximum transplant success rates. Utilizing cutting-edge predictive AI models and real-time biological marker analysis, we ensure optimal organ compatibility, minimized rejection risks, and improved post-operative patient outcomes.</p>
+              <div className="card glass-container" style={{ gridColumn: 'span 8', gridRow: 'span 2', background: 'rgba(255, 255, 255, 0.7)', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '0 20px 40px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
+                <img src="/dna.png" alt="DNA Precision Matching" style={{ width: '100%', height: '320px', objectFit: 'cover' }} />
+                <div style={{ padding: '3rem' }}>
+                  <h3 style={{ fontSize: '2.5rem', color: '#0f172a', fontWeight: 900, marginBottom: '1rem' }}>Biological Precision Matching</h3>
+                  <p style={{ color: '#475569', fontSize: '1.15rem', lineHeight: 1.8 }}>Advanced genomic sequencing and HLA cross-matching algorithms for maximum transplant success rates. Utilizing cutting-edge predictive AI models and real-time biological marker analysis, we ensure optimal organ compatibility, minimized rejection risks, and improved post-operative patient outcomes.</p>
+                </div>
               </div>
               
-              <div className="card" style={{ gridColumn: 'span 4', background: 'linear-gradient(135deg, var(--primary), #ea580c)', border: 'none', boxShadow: '0 20px 40px rgba(234, 88, 12, 0.3)', color: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <img src="/hospital.png" alt="Institutional Nodes" style={{ width: '100%', height: '160px', objectFit: 'cover', borderRadius: '12px', marginBottom: '1.5rem', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }} />
-                <h3 style={{ color: 'white', fontSize: '1.75rem', fontWeight: 800 }}>Institutional Nodes</h3>
-                <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.05rem', lineHeight: 1.6 }}>Verified clinical network ensuring secure facility-to-facility data handoffs.</p>
+              <div className="card" style={{ gridColumn: 'span 4', background: 'linear-gradient(135deg, var(--primary), #ea580c)', border: 'none', boxShadow: '0 20px 40px rgba(234, 88, 12, 0.3)', color: 'white', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
+                <img src="/hospital.png" alt="Institutional Nodes" style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+                <div style={{ padding: '2.5rem' }}>
+                  <h3 style={{ color: 'white', fontSize: '1.75rem', fontWeight: 800 }}>Institutional Nodes</h3>
+                  <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.05rem', lineHeight: 1.6 }}>Verified clinical network ensuring secure facility-to-facility data handoffs.</p>
+                </div>
               </div>
 
-              <div className="card glass-container" style={{ gridColumn: 'span 4', background: 'rgba(255, 255, 255, 0.7)', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <img src="/secure.png" alt="Secure Protocols" style={{ width: '100%', height: '160px', objectFit: 'cover', borderRadius: '12px', marginBottom: '1.5rem', boxShadow: '0 10px 20px rgba(0,0,0,0.05)' }} />
-                <h3 style={{ color: '#0f172a', fontSize: '1.75rem', fontWeight: 800 }}>Secure Protocols</h3>
-                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6 }}>End-to-end encrypted audits and immutable transplant ledgers.</p>
+              <div className="card glass-container" style={{ gridColumn: 'span 4', background: 'rgba(255, 255, 255, 0.7)', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '0 10px 30px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
+                <img src="/secure.png" alt="Secure Protocols" style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+                <div style={{ padding: '2.5rem' }}>
+                  <h3 style={{ color: '#0f172a', fontSize: '1.75rem', fontWeight: 800 }}>Secure Protocols</h3>
+                  <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6 }}>End-to-end encrypted audits and immutable transplant ledgers.</p>
+                </div>
               </div>
 
-              <div className="card glass-container" style={{ gridColumn: 'span 12', background: 'rgba(255, 255, 255, 0.8)', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', gap: '4rem', padding: '3.5rem' }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ width: '60px', height: '60px', background: '#fffbeb', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', marginBottom: '1.5rem' }}>⚡</div>
+              <div className="card glass-container" style={{ gridColumn: 'span 12', background: 'rgba(255, 255, 255, 0.8)', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'row', alignItems: 'stretch', padding: 0, overflow: 'hidden' }}>
+                <img src="/logistics.png" alt="Regional Logistics" style={{ width: '40%', minHeight: '300px', objectFit: 'cover' }} />
+                <div style={{ padding: '4rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <h3 style={{ fontSize: '2.5rem', color: '#0f172a', fontWeight: 900, marginBottom: '1rem' }}>Real-time Regional Logistics</h3>
                   <p style={{ color: '#475569', fontSize: '1.15rem', lineHeight: 1.8 }}>Dynamic proximity scoring and continuous organ preservation monitoring to significantly minimize ischemic time during transition. By integrating with high-speed emergency transport fleets and regional traffic networks, we provide real-time location tracking.</p>
                 </div>
