@@ -87,11 +87,9 @@ export default function Home() {
           </div>
         </section>
         
-        <section style={{ padding: '8rem 2rem', position: 'relative' }}>
-          {/* Subtle glow background for the section */}
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80%', height: '80%', background: 'radial-gradient(circle, var(--primary-glow) 0%, transparent 70%)', filter: 'blur(100px)', zIndex: 0, pointerEvents: 'none' }}></div>
+        <section style={{ padding: '8rem 2rem' }}>
           
-          <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '6rem' }}>
               <div style={{ display: 'inline-block', padding: '0.5rem 1.25rem', background: 'var(--primary-light)', color: 'var(--primary)', borderRadius: '100px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.15em', fontSize: '0.8rem', marginBottom: '1.5rem', boxShadow: '0 4px 12px var(--primary-light)' }}>Next-Gen Systems</div>
               <h2 style={{ fontSize: '4rem', fontWeight: 1000, marginBottom: '1.5rem', color: '#0f172a', letterSpacing: '-0.04em' }}>Protocol Infrastructure</h2>
