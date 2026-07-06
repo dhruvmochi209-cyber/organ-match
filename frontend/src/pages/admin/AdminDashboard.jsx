@@ -111,7 +111,7 @@ export default function AdminDashboard() {
         </div>
 
         {stats && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '3rem' }}>
+          <div className="mobile-grid-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '3rem' }}>
             {[
               { label: 'User Directory', val: users.length, color: 'var(--primary)', icon: '👥' },
               { label: 'Registry Nodes', val: hospitals.length, color: '#6366f1', icon: '🏥' },

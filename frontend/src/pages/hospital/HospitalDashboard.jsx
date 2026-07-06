@@ -189,7 +189,7 @@ export default function HospitalDashboard() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1.5rem', marginBottom: '3rem' }}>
+        <div className="mobile-grid-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1.5rem', marginBottom: '3rem' }}>
           {[
             { label: 'Pending Verification', val: pendingPatients.donors.length + pendingPatients.recipients.length, color: 'var(--primary)', icon: '⌛' },
             { label: 'Active Patients', val: patients.donors.length + patients.recipients.length, color: '#6366f1', icon: '👥' },

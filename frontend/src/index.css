@@ -798,22 +798,68 @@ h2 { font-size: 2rem; }
 
 /* Upload Zone */
 .upload-zone {
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed var(--border-color);
   border-radius: var(--border-radius-sm);
-  padding: 2.5rem 1.5rem;
+  padding: 2rem;
   text-align: center;
-  background: #f8fafc;
-  cursor: pointer;
   transition: var(--transition-smooth);
+  cursor: pointer;
 }
+
 .upload-zone:hover {
   border-color: var(--primary);
-  background: #fff7ed;
+  background: var(--primary-light);
 }
+
+.upload-zone.drag-active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  transform: scale(1.02);
+}
+
 .upload-zone svg {
   color: #94a3b8;
   transition: var(--transition-smooth);
 }
+
 .upload-zone:hover svg {
   color: var(--primary);
+}
+
+/* Responsive Utilities for completely working in mobile */
+@media (max-width: 768px) {
+  .mobile-col-flex { flex-direction: column !important; }
+  .mobile-grid-1 { grid-template-columns: 1fr !important; }
+  .mobile-p-1 { padding: 1rem !important; }
+  .mobile-p-2 { padding: 2rem 1rem !important; }
+  .mobile-p-3 { padding: 3rem 1rem !important; }
+  .mobile-p-4 { padding: 4rem 1rem !important; }
+  .mobile-text-xl { font-size: 2.5rem !important; }
+  .mobile-text-lg { font-size: 1.8rem !important; }
+  .mobile-text-md { font-size: 1.1rem !important; }
+  .mobile-span-12 { grid-column: span 1 !important; }
+  .mobile-nav { padding: 1rem !important; left: 1rem !important; right: 1rem !important; }
+  .mobile-footer { padding: 3rem 1rem !important; }
+  .mobile-w-full { width: 100% !important; min-height: 200px !important; }
+  .mobile-gap-1 { gap: 1rem !important; }
+  .mobile-text-center { text-align: center !important; }
+  
+  /* Global Element Overrides for Mobile */
+  .card { padding: 1.5rem !important; }
+  .stat-card { padding: 1.5rem !important; }
+  .btn { padding: 0.875rem 1.25rem !important; width: 100%; white-space: normal !important; }
+  
+  /* Additional tweaks for specific items */
+  .auth-form-container h1 { font-size: 2rem !important; }
+  .auth-right { padding: 2rem 1rem !important; }
+  
+  /* Home page specifics */
+  .home-hero-btns { flex-direction: column; width: 100%; }
+  .home-hero-btns button { width: 100%; }
+  
+  .footer-links-container { flex-direction: column !important; gap: 2rem !important; }
+  
+  /* Make image block inside card flex column */
+  .card.glass-container { flex-direction: column !important; }
+  .card.glass-container img { width: 100% !important; }
 }

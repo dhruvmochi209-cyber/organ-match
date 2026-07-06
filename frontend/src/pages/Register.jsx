@@ -43,7 +43,7 @@ export default function Register() {
               </div>
             )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div className="mobile-grid-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
               <div className="auth-form-group" style={{ marginBottom: 0 }}>
                 <label className="auth-label">Username</label>
                 <input type="text" className="auth-input" required minLength="3"
